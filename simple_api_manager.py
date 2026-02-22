@@ -9,19 +9,19 @@ class SimpleAPIManager:
                 'name': 'OpenWeather Map',
                 'priority': 1,
                 'active': True,
-                'api_key': '068665538215f76129d2063df1decc75'
+                'api_key': ''
             },
             'waqi': {
                 'name': 'World Air Quality Index',
                 'priority': 2, 
                 'active': True,
-                'api_key': '2fea9e212c0d3d47ae6bbd4e8cb61dc7a5a2665c'
+                'api_key': ''
             },
             'cpcb': {
                 'name': 'CPCB India',
                 'priority': 3,
                 'active': True,
-                'api_key': '579b464db66ec23bdd000001840fd4ab88624a7477502ad6aa6fb0d4'
+                'api_key': ''
             }
         }
     def _validate_waqi_data_quality(self, data, city):
