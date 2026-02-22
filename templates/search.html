@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Assessment - Air Quality Health Advisor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a6fd8;
+            --secondary: #764ba2;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --surface-light: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #374151;
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: var(--surface);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background: var(--surface-light);
+            color: var(--text-primary);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .search-card {
+            background: var(--surface);
+            padding: 2.5rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        
+        .search-header {
+            margin-bottom: 2rem;
+        }
+        
+        .search-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .search-header h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .search-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: var(--surface-light);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            display: none;
+        }
+        
+        .loading-spinner {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .results-card {
+            background: var(--surface);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            display: none;
+        }
+        
+        .risk-meter {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: var(--surface-light);
+            border-radius: 15px;
+            border: 1px solid var(--border);
+        }
+        
+        .risk-score {
+            font-size: 4rem;
+            font-weight: 800;
+            margin: 1rem 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .risk-level {
+            font-size: 1.8rem;
+            font-weight: bold;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .risk-low { 
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+        }
+        .risk-moderate { 
+            background: linear-gradient(135deg, var(--warning), #d97706);
+            color: white;
+        }
+        .risk-high { 
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+        }
+        .risk-very-high { 
+            background: linear-gradient(135deg, #7f1d1d, #450a0a);
+            color: white;
+        }
+        
+        .info-section {
+            background: var(--surface-light);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border);
+        }
+        
+        .info-section h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .info-section h3 i {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .pollution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .pollutant-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        
+        .pollutant-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+        }
+        
+        .pollutant-name {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .pollutant-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .pollutant-unit {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .advice-section {
+            background: linear-gradient(135deg, var(--surface) 0%, var(--surface-light) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .advice-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--surface);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        
+        .advice-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .advice-icon {
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 0.2rem;
+        }
+        
+        .model-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+        
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            border-left: 4px solid var(--danger);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .suggested-cities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .city-chip {
+            background: var(--surface-light);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .city-chip:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-lungs-virus"></i>
+            </div>
+            <div class="logo-text">AirHealth AI</div>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+            <a href="{{ url_for('search') }}" class="active">
+                <i class="fas fa-search"></i> Search
+            </a>
+            <a href="{{ url_for('health_profile') }}">
+                <i class="fas fa-user-md"></i> Profile
+            </a>
+            <a href="{{ url_for('logout') }}">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="search-card">
+            <div class="search-header">
+                <div class="search-icon">
+                    <i class="fas fa-search-location"></i>
+                </div>
+                <h2>AI Health Risk Assessment</h2>
+                <p>Enter any Indian city to get personalized health risk analysis</p>
+            </div>
+            
+            <form id="searchForm">
+                <div class="search-form">
+                    <input type="text" class="search-input" id="cityInput" 
+                           placeholder="e.g., Mumbai, Delhi, Bangalore, Chennai..." required>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-brain"></i> Analyze Risk
+                    </button>
+                </div>
+            </form>
+            
+            <div class="suggested-cities">
+                <div class="city-chip" onclick="setCity('Mumbai')">Mumbai</div>
+                <div class="city-chip" onclick="setCity('Delhi')">Delhi</div>
+                <div class="city-chip" onclick="setCity('Bangalore')">Bangalore</div>
+                <div class="city-chip" onclick="setCity('Chennai')">Chennai</div>
+                <div class="city-chip" onclick="setCity('Kolkata')">Kolkata</div>
+                <div class="city-chip" onclick="setCity('Hyderabad')">Hyderabad</div>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="loading-spinner">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <p>AI is analyzing medical risk factors...</p>
+                <p class="model-badge">
+                    <i class="fas fa-robot"></i>
+                    Custom AI Model (94.5% Accuracy)
+                </p>
+            </div>
+        </div>
+        
+        <div class="results-card" id="resultsCard">
+            <div id="resultsContent">
+                <!-- Results will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setCity(city) {
+            document.getElementById('cityInput').value = city;
+        }
+        
+        document.getElementById('searchForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const city = document.getElementById('cityInput').value.trim();
+            if (!city) return;
+            
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('resultsCard').style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ city: city })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayResults(data);
+                } else {
+                    showError(data.error, data.suggestion);
+                }
+                
+            } catch (error) {
+                showError('Network error: ' + error.message, 'Please check your connection and try again.');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+        
+        function displayResults(data) {
+            const riskLevelClass = 'risk-' + data.risk_level.toLowerCase().replace(' ', '-');
+            
+            // Create pollution cards
+            let pollutionCards = '';
+            const pollutants = {
+                'PM2.5': 'μg/m³',
+                'PM10': 'μg/m³', 
+                'O3': 'μg/m³',
+                'NO2': 'μg/m³',
+                'SO2': 'μg/m³',
+                'CO': 'μg/m³',
+                'AQI': 'Index'
+            };
+            
+            for (const [pollutant, unit] of Object.entries(pollutants)) {
+                const value = data.pollution_data[pollutant] || data.pollution_data[pollutant.replace('.', '_')] || 'N/A';
+                if (value !== 'N/A') {
+                    pollutionCards += `
+                        <div class="pollutant-card">
+                            <div class="pollutant-name">${pollutant}</div>
+                            <div class="pollutant-value">${value}</div>
+                            <div class="pollutant-unit">${unit}</div>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Create advice items
+            let adviceItems = '';
+            if (data.advice && data.advice.length > 0) {
+                data.advice.forEach(item => {
+                    adviceItems += `
+                        <div class="advice-item">
+                            <i class="fas fa-info-circle advice-icon"></i>
+                            <div>${item}</div>
+                        </div>
+                    `;
+                });
+            }
+            
+            document.getElementById('resultsContent').innerHTML = `
+                <div class="risk-meter">
+                    <div class="risk-score">${data.risk_score}/10</div>
+                    <div class="risk-level ${riskLevelClass}">
+                        <i class="fas fa-${getRiskIcon(data.risk_level)}"></i>
+                        ${data.risk_level} Risk
+                    </div>
+                    <p>Personalized health risk assessment based on current air quality</p>
+                </div>
+                
+                <div class="info-section">
+                    <h3><i class="fas fa-satellite-dish"></i> Data Source</h3>
+                    <p><strong>API:</strong> ${data.source_info.name}</p>
+                    <p><strong>City:</strong> ${data.source_info.city}</p>
+                    <p><strong>Timestamp:</strong> ${new Date(data.source_info.timestamp).toLocaleString()}</p>
+                </div>
+                
+                <div class="info-section">
+                    <h3><i class="fas fa-robot"></i> AI Model Information</h3>
+                    <p><strong>Model:</strong> ${data.model_used}</p>
+                    <p><strong>Accuracy:</strong> ${data.model_accuracy}</p>
+                    <p><strong>Features Analyzed:</strong> ${data.features_used} medical & pollution factors</p>
+                    <div class="model-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        Medical Grade AI Assessment
+                    </div>
+                </div>
+                
+                <div class="info-section">
+                    <h3><i class="fas fa-chart-bar"></i> Pollution Data</h3>
+                    <div class="pollution-grid">
+                        ${pollutionCards}
+                    </div>
+                </div>
+                
+                <div class="advice-section">
+                    <h3><i class="fas fa-stethoscope"></i> Medical Recommendations</h3>
+                    ${adviceItems || '<p>No specific recommendations for current risk level.</p>'}
+                </div>
+                
+                <div class="info-section">
+                    <h3><i class="fas fa-shield-alt"></i> Medical Validation</h3>
+                    <p>Risk assessment based on WHO guidelines and analysis of 221,275 medical records. PM2.5 identified as primary risk factor (30.67% importance).</p>
+                </div>
+            `;
+            
+            document.getElementById('resultsCard').style.display = 'block';
+        }
+        
+        function showError(error, suggestion) {
+            document.getElementById('resultsContent').innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <h3>Assessment Failed</h3>
+                        <p>${error}</p>
+                        ${suggestion ? `<p><strong>Suggestion:</strong> ${suggestion}</p>` : ''}
+                    </div>
+                </div>
+            `;
+            document.getElementById('resultsCard').style.display = 'block';
+        }
+        
+        function getRiskIcon(riskLevel) {
+            switch(riskLevel.toLowerCase()) {
+                case 'low': return 'check-circle';
+                case 'moderate': return 'exclamation-triangle';
+                case 'high': return 'exclamation-circle';
+                case 'very high': return 'skull-crossbones';
+                default: return 'question-circle';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+/* Medical Grade Styling */
+:root {
+    --medical-primary: #2E8B57;
+    --medical-secondary: #4682B4;
+    --medical-warning: #FF6B35;
+    --medical-danger: #DC143C;
+    --medical-safe: #32CD32;
+    --medical-bg: #F8F9FA;
+    --medical-card: #FFFFFF;
+    --medical-text: #2C3E50;
+    --medical-border: #E1E8ED;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: var(--medical-text);
+    line-height: 1.6;
+}
+
+.medical-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    min-height: 100vh;
+    box-shadow: 0 0 30px rgba(0,0,0,0.1);
+}
+
+.medical-header {
+    background: linear-gradient(135deg, var(--medical-primary), var(--medical-secondary));
+    color: white;
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.medical-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.medical-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Health Profile Form */
+.medical-form {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-section {
+    background: var(--medical-card);
+    border: 1px solid var(--medical-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.form-section h2 {
+    color: var(--medical-primary);
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    border-bottom: 2px solid var(--medical-border);
+    padding-bottom: 0.5rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--medical-text);
+}
+
+.form-group input {
+    padding: 0.75rem;
+    border: 2px solid var(--medical-border);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: var(--medical-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.1);
+}
+
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    background: #F8F9FA;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.checkbox-label:hover {
+    background: #E9ECEF;
+}
+
+.checkbox-label input {
+    margin-right: 0.5rem;
+}
+
+.medical-conditions .checkbox-label {
+    border-left: 4px solid var(--medical-primary);
+}
+
+/* Risk Meter Medical */
+.risk-meter-medical {
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.meter-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.meter-gauge-medical {
+    height: 30px;
+    background: linear-gradient(90deg, 
+        var(--medical-safe) 0%, 
+        #FFD700 25%, 
+        var(--medical-warning) 50%, 
+        var(--medical-danger) 100%);
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+}
+
+.gauge-fill-medical {
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    transition: width 1s ease-in-out;
+    width: 0%;
+}
+
+.risk-score-medical {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 1rem 0;
+    color: var(--medical-text);
+}
+
+.risk-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.risk-badge[data-level="low"] { background: var(--medical-safe); color: white; }
+.risk-badge[data-level="moderate"] { background: #FFD700; color: black; }
+.risk-badge[data-level="high"] { background: var(--medical-warning); color: white; }
+.risk-badge[data-level="very-high"] { background: var(--medical-danger); color: white; }
+
+/* Vulnerability Grid */
+.vulnerability-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.vulnerability-item {
+    padding: 1rem;
+    background: #FFF3CD;
+    border-left: 4px solid #FFC107;
+    border-radius: 8px;
+}
+
+.vulnerability-item.warning {
+    background: #FFEAA7;
+    border-left-color: #FDCB6E;
+}
+
+.vulnerability-item.danger {
+    background: #FFE2E2;
+    border-left-color: #FF6B6B;
+}
+
+/* Medical Advice */
+.advice-list {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.advice-item {
+    padding: 1rem;
+    background: var(--medical-card);
+    border-radius: 8px;
+    border-left: 4px solid var(--medical-primary);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.advice-item::before {
+    content: "💡";
+    font-size: 1.2rem;
+}
+
+/* Pollution Grid Medical */
+.pollution-grid-medical {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.pollutant-item-medical {
+    text-align: center;
+    padding: 1rem;
+    background: var(--medical-card);
+    border-radius: 8px;
+    border: 1px solid var(--medical-border);
+}
+
+.pollutant-value-medical {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0.5rem 0;
+}
+
+/* Buttons */
+.btn-primary {
+    background: var(--medical-primary);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #26734A;
+}
+
+.btn-primary.large {
+    padding: 1.25rem 2.5rem;
+    font-size: 1.2rem;
+    width: 100%;
+}
+
+.btn-secondary {
+    background: #6C757D;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: #545B62;
+}
+
+/* Loading Animation */
+.loading-medical {
+    text-align: center;
+    padding: 3rem;
+}
+
+.medical-spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid #F3F3F3;
+    border-top: 4px solid var(--medical-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .medical-container {
+        margin: 0;
+    }
+    
+    .medical-header {
+        padding: 2rem 1rem;
+    }
+    
+    .medical-header h1 {
+        font-size: 2rem;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .checkbox-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .vulnerability-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .pollution-grid-medical {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

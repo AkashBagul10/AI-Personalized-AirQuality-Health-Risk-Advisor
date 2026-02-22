@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search History - Air Quality Health Advisor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a6fd8;
+            --secondary: #764ba2;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --surface-light: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #374151;
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: var(--surface);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background: var(--surface-light);
+            color: var(--text-primary);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, var(--surface) 0%, var(--surface-light) 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        
+        .page-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .page-header p {
+            color: var(--text-secondary);
+        }
+        
+        .history-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .history-list {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+        }
+        
+        .history-item {
+            background: var(--surface-light);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        
+        .history-item:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .city-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .risk-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .risk-low { background: var(--success); color: white; }
+        .risk-moderate { background: var(--warning); color: white; }
+        .risk-high { background: var(--danger); color: white; }
+        .risk-very-high { background: #7f1d1d; color: white; }
+        
+        .history-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .detail-label {
+            color: var(--text-secondary);
+        }
+        
+        .detail-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        .no-history {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+        
+        .no-history i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-lungs-virus"></i>
+            </div>
+            <div class="logo-text">AirHealth AI</div>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+            <a href="{{ url_for('search') }}">
+                <i class="fas fa-search"></i> Search
+            </a>
+            <a href="{{ url_for('history') }}" class="active">
+                <i class="fas fa-history"></i> History
+            </a>
+            <a href="{{ url_for('health_profile') }}">
+                <i class="fas fa-user-md"></i> Profile
+            </a>
+            <a href="{{ url_for('logout') }}">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-history"></i> Search History</h1>
+            <p>Review your previous air quality risk assessments</p>
+        </div>
+        
+        {% if searches %}
+        <div class="history-stats">
+            <div class="stat-card">
+                <div class="stat-number">{{ searches|length }}</div>
+                <div class="stat-label">Total Assessments</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">
+                    {{ (searches|selectattr('risk_level', 'equalto', 'High')|list + searches|selectattr('risk_level', 'equalto', 'Very High')|list)|length }}
+                </div>
+                <div class="stat-label">High Risk Cases</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">
+                    {{ (searches|map(attribute='city')|unique|list)|length }}
+                </div>
+                <div class="stat-label">Cities Checked</div>
+            </div>
+        </div>
+        
+        <div class="history-list">
+            {% for search in searches %}
+            <div class="history-item">
+                <div class="history-header">
+                    <div class="city-name">
+                        <i class="fas fa-map-marker-alt"></i> {{ search.city }}
+                    </div>
+                    <div class="risk-badge risk-{{ search.risk_level.lower().replace(' ', '-') }}">
+                        {{ search.risk_score }}/10 - {{ search.risk_level }}
+                    </div>
+                </div>
+                
+                <div class="history-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Date & Time</span>
+                        <span class="detail-value">{{ search.timestamp.strftime('%Y-%m-%d %H:%M') }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Data Source</span>
+                        <span class="detail-value">{{ search.data_source }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">AI Model</span>
+                        <span class="detail-value">{{ search.model_used }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Features Used</span>
+                        <span class="detail-value">{{ search.features_used }}</span>
+                    </div>
+                </div>
+                
+                <div class="pollution-preview">
+                    {% set pollution_data = search.pollution_data %}
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.5rem; font-size: 0.9rem;">
+                        {% if pollution_data.PM2_5 %}
+                        <div style="text-align: center;">
+                            <div style="color: var(--text-secondary);">PM2.5</div>
+                            <div style="font-weight: 600;">{{ pollution_data.PM2_5 }} μg/m³</div>
+                        </div>
+                        {% endif %}
+                        {% if pollution_data.PM10 %}
+                        <div style="text-align: center;">
+                            <div style="color: var(--text-secondary);">PM10</div>
+                            <div style="font-weight: 600;">{{ pollution_data.PM10 }} μg/m³</div>
+                        </div>
+                        {% endif %}
+                        {% if pollution_data.O3 %}
+                        <div style="text-align: center;">
+                            <div style="color: var(--text-secondary);">O3</div>
+                            <div style="font-weight: 600;">{{ pollution_data.O3 }} μg/m³</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-history">
+            <i class="fas fa-search"></i>
+            <h3>No Search History Yet</h3>
+            <p>You haven't performed any air quality assessments yet.</p>
+            <a href="{{ url_for('search') }}" class="btn" style="margin-top: 1rem;">
+                <i class="fas fa-search"></i> Perform First Assessment
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
